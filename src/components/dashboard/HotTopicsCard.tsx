@@ -1,23 +1,40 @@
-import React from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
-import { Car } from 'lucide-react'
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import CustomWordCloud from "../CustomWordCloud";
 
 const HotTopicsCard = () => {
   return (
-    <Card className='col-span-4'>
-        <CardHeader>
-            <CardTitle className='text-2xl font-bold flex items-center gap-2'>
-            Hot Topics
-            </CardTitle>
-            <CardDescription>
-                Click on a topic to start a quiz on it.
-            </CardDescription>
-        </CardHeader>
-        <CardContent className='pl-2'>
-            Word Cloud
-        </CardContent>
+    <Card className="col-span-4">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-2xl font-bold">
+          Hot Topics
+        </CardTitle>
+        <CardDescription>
+          Click on a topic to start a quiz on it.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="pl-2">
+        <CustomWordCloud
+          words={[
+            "React",
+            "TypeScript",
+            "SVG",
+            "Frontend",
+            "Hooks",
+            "Performance",
+            "UI",
+            "Web",
+          ]}
+        />
+      </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default HotTopicsCard
+export default HotTopicsCard;

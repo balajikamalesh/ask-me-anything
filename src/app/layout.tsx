@@ -24,7 +24,6 @@ export default function RootLayout({
       <html lang="en" className={`${geist.variable}`}>
         <body>
           <Navbar />
-          <div className="h-12"></div>
           {children}
         </body>
       </html>

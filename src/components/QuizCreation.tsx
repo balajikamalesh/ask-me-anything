@@ -1,0 +1,148 @@
+"use client";
+
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { useForm } from "react-hook-form";
+import { QuizCreationSchema } from "@/schema/form/quiz";
+import type z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "./ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+
+type Props = {};
+
+type InputForm = z.infer<typeof QuizCreationSchema>;
+
+const QuizCreation = (props: Props) => {
+  const form = useForm<InputForm>({
+    resolver: zodResolver(QuizCreationSchema),
+    defaultValues: {
+      count: 3,
+      topic: "",
+      type: "open_ended",
+    },
+  });
+
+  function onSubmit(data: InputForm) {
+    console.log(data);
+  }
+
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-100">
+        <CardHeader>
+          <CardTitle>Create a New Quiz</CardTitle>
+          <CardDescription>Choose a topic for your quiz</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="topic"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Topic</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter topic" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Please enter a topic for your quiz between 4 and 50
+                      characters.
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="count"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Number of Questions</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter number of questions"
+                        type="number"
+                        min={3}
+                        max={10}
+                        {...field}
+                        onChange={(e) =>
+                          form.setValue("count", parseInt(e.target.value))
+                        }
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Choose a number of questions between 1 and 10.
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Quiz Type</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select quiz type" />
+                        </SelectTrigger>
+                        <SelectContent align="center" position="item-aligned" sideOffset={5}>
+                          <SelectGroup>
+                            <SelectLabel>Quiz Types</SelectLabel>
+                            <SelectItem value="multiple_choice">
+                              Multiple Choice
+                            </SelectItem>
+                            <SelectItem value="true_false">
+                              True/False
+                            </SelectItem>
+                            <SelectItem value="open_ended">
+                              Open Ended
+                            </SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormDescription>
+                      Select the type of quiz you want to create.{" "}
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Submit</Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default QuizCreation;

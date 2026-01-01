@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { de } from "zod/v4/locales";
 
 type WordPlacement = {
   text: string;

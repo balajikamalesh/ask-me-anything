@@ -31,12 +31,28 @@ import {
 } from "@/components/ui/select";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 type InputForm = z.infer<typeof QuizCreationSchema>;
 
 const QuizCreation = (props: Props) => {
+  const router = useRouter();
+
+  const { mutate: getQuestions, isPending } = useMutation({
+    mutationFn: async ({ count, topic, type }: InputForm) => {
+      const response = await axios.post("/api/game", {
+        count,
+        topic,
+        type,
+      });
+      return response.data;
+    },
+  });
+
   const form = useForm<InputForm>({
     resolver: zodResolver(QuizCreationSchema),
     defaultValues: {
@@ -47,11 +63,15 @@ const QuizCreation = (props: Props) => {
   });
 
   function onSubmit(data: InputForm) {
-    console.log(data);
+    getQuestions(data, {
+      onSuccess: ({ gameId }) => {
+        router.push(`/play/${form.getValues("type")}/${gameId}`);
+      },
+    });
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex min-h-screen items-center justify-center">
       <Card className="w-100">
         <CardHeader>
           <CardTitle>Create a New Quiz</CardTitle>
@@ -114,7 +134,11 @@ const QuizCreation = (props: Props) => {
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select quiz type" />
                         </SelectTrigger>
-                        <SelectContent align="center" position="item-aligned" sideOffset={5}>
+                        <SelectContent
+                          align="center"
+                          position="item-aligned"
+                          sideOffset={5}
+                        >
                           <SelectGroup>
                             <SelectLabel>Quiz Types</SelectLabel>
                             <SelectItem value="multiple_choice">
@@ -136,7 +160,9 @@ const QuizCreation = (props: Props) => {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={isPending}>
+                Submit
+              </Button>
             </form>
           </Form>
         </CardContent>

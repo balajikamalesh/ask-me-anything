@@ -103,9 +103,39 @@ exports.Prisma.UserScalarFieldEnum = {
   emailAddress: 'emailAddress'
 };
 
+exports.Prisma.GameScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  topic: 'topic',
+  userEmail: 'userEmail',
+  timeStarted: 'timeStarted',
+  timeEnded: 'timeEnded',
+  gametype: 'gametype'
+};
+
+exports.Prisma.QuestionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  gameId: 'gameId',
+  question: 'question',
+  answer: 'answer',
+  options: 'options',
+  isCorrect: 'isCorrect',
+  isCorrectChoice: 'isCorrectChoice',
+  percentCorrect: 'percentCorrect',
+  userAnswer: 'userAnswer'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -118,9 +148,21 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+exports.GameType = exports.$Enums.GameType = {
+  open_ended: 'open_ended',
+  true_false: 'true_false',
+  multiple_choice: 'multiple_choice'
+};
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Game: 'Game',
+  Question: 'Question'
 };
 /**
  * Create the Client
@@ -170,13 +212,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        String   @id @default(cuid())\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  imageUrl  String?\n  firstName String?\n  lastName  String?\n\n  emailAddress String @unique\n}\n",
-  "inlineSchemaHash": "9e049e7e63178c78bd97daee500e993c70aaee3df4f3cbac7f5c2072341f6a4b",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nenum GameType {\n  open_ended\n  true_false\n  multiple_choice\n}\n\nmodel User {\n  id        String   @id @default(cuid())\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  imageUrl  String?\n  firstName String?\n  lastName  String?\n\n  emailAddress String @unique\n}\n\nmodel Game {\n  id        String   @id @default(cuid())\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  topic       String\n  userEmail   String\n  timeStarted DateTime\n  timeEnded   DateTime?\n  gametype    GameType\n  questions   Question[]\n}\n\nmodel Question {\n  id        String   @id @default(cuid())\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  gameId   String\n  question String\n  answer   String\n  options  Json? // for multiple choice questions\n\n  isCorrect       Boolean? // for true/false questions\n  isCorrectChoice Boolean? // for multiple choice questions\n  percentCorrect  Float? //for open ended quesions\n\n  userAnswer String?\n\n  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)\n\n  @@index([gameId], name: \"idx_gameId\")\n}\n",
+  "inlineSchemaHash": "2675ea7365153a0be45c3f1dbe6d4cb4a61b80762418f014da418a814b2dc40a",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"imageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailAddress\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"imageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"firstName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lastName\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailAddress\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null},\"Game\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"topic\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userEmail\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"timeStarted\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"timeEnded\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"gametype\",\"kind\":\"enum\",\"type\":\"GameType\"},{\"name\":\"questions\",\"kind\":\"object\",\"type\":\"Question\",\"relationName\":\"GameToQuestion\"}],\"dbName\":null},\"Question\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"gameId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"question\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"answer\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"options\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"isCorrect\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"isCorrectChoice\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"percentCorrect\",\"kind\":\"scalar\",\"type\":\"Float\"},{\"name\":\"userAnswer\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"game\",\"kind\":\"object\",\"type\":\"Game\",\"relationName\":\"GameToQuestion\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

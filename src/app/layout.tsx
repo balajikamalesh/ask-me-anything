@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import "@/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import QueryProvider from "@/components/query-provider";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
@@ -23,8 +24,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" className={`${geist.variable}`}>
         <body>
-          <Navbar />
-          {children}
+          <QueryProvider>
+            <Navbar />
+            {children}
+          </QueryProvider>
         </body>
       </html>
     </ClerkProvider>

@@ -11,6 +11,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum GameType {
+  open_ended
+  true_false
+  multiple_choice
+}
+
 model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -21,4 +27,38 @@ model User {
   lastName  String?
 
   emailAddress String @unique
+}
+
+model Game {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  topic       String
+  userEmail   String
+  timeStarted DateTime
+  timeEnded   DateTime?
+  gametype    GameType
+  questions   Question[]
+}
+
+model Question {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  gameId   String
+  question String
+  answer   String
+  options  Json? // for multiple choice questions
+
+  isCorrect       Boolean? // for true/false questions
+  isCorrectChoice Boolean? // for multiple choice questions
+  percentCorrect  Float? //for open ended quesions
+
+  userAnswer String?
+
+  game Game @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId], name: "idx_gameId")
 }

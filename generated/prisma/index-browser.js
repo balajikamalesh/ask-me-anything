@@ -131,9 +131,39 @@ exports.Prisma.UserScalarFieldEnum = {
   emailAddress: 'emailAddress'
 };
 
+exports.Prisma.GameScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  topic: 'topic',
+  userEmail: 'userEmail',
+  timeStarted: 'timeStarted',
+  timeEnded: 'timeEnded',
+  gametype: 'gametype'
+};
+
+exports.Prisma.QuestionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  gameId: 'gameId',
+  question: 'question',
+  answer: 'answer',
+  options: 'options',
+  isCorrect: 'isCorrect',
+  isCorrectChoice: 'isCorrectChoice',
+  percentCorrect: 'percentCorrect',
+  userAnswer: 'userAnswer'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -146,9 +176,21 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
+exports.GameType = exports.$Enums.GameType = {
+  open_ended: 'open_ended',
+  true_false: 'true_false',
+  multiple_choice: 'multiple_choice'
+};
 
 exports.Prisma.ModelName = {
-  User: 'User'
+  User: 'User',
+  Game: 'Game',
+  Question: 'Question'
 };
 
 /**

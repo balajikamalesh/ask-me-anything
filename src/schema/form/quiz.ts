@@ -7,3 +7,11 @@ export const QuizCreationSchema = z.object({
 });
 
 export type QuizCreationType = z.infer<typeof QuizCreationSchema>;
+
+export const checkAnswerSchema = z.object({
+    questionId: z.string(),
+    userAnswer: z.string().min(1, "Answer is required"),
+    questionType: z.enum(["multiple_choice", "true_false", "open_ended"])
+});
+
+export type CheckAnswerType = z.infer<typeof checkAnswerSchema>;

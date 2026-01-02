@@ -42,7 +42,6 @@ export async function POST(request: Request) {
         answer: question.answer,
         options: JSON.stringify(
           [
-            question.answer,
             question.option1,
             question.option2,
             question.option3,

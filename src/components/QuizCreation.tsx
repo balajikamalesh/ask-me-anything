@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { toast } from "sonner";
 import {
   Card,
   CardContent,
@@ -34,6 +35,7 @@ import { Button } from "./ui/button";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Loader } from "lucide-react";
 
 type Props = {};
 
@@ -65,8 +67,12 @@ const QuizCreation = (props: Props) => {
   function onSubmit(data: InputForm) {
     getQuestions(data, {
       onSuccess: ({ gameId }) => {
+        toast.success("Quiz created successfully!");
         router.push(`/play/${form.getValues("type")}/${gameId}`);
       },
+      onError: (error) => {
+        toast.error("Failed to create quiz. Please try again.");
+      }
     });
   }
 
@@ -160,8 +166,9 @@ const QuizCreation = (props: Props) => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isPending}>
+              <Button className="cursor-pointer" type="submit" disabled={isPending}>
                 Submit
+                {isPending && <Loader className="animate-spin" />}
               </Button>
             </form>
           </Form>

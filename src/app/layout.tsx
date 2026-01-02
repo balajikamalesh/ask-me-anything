@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import "@/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import QueryProvider from "@/components/query-provider";
+import { Toaster } from "@/components/ui/sonner"
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
@@ -27,6 +28,7 @@ export default function RootLayout({
           <QueryProvider>
             <Navbar />
             {children}
+            <Toaster />
           </QueryProvider>
         </body>
       </html>

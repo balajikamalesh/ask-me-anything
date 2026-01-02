@@ -19,7 +19,7 @@ export async function POST(request: Request) {
         ),
         {
           question: "question",
-          answer: "answer with max length of 15 words",
+          answer: "answer with max length of 15 words, must match exactly one of the options",
           option1: "option1 with max length of 15 words",
           option2: "option2 with max length of 15 words",
           option3: "option3 with max length of 15 words",

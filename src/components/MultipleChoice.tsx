@@ -17,11 +17,12 @@ import { cn, formatTimeDelta } from "@/lib/utils";
 
 type Props = {
   game: Game & { questions: Pick<Question, "id" | "question" | "options">[] };
+  mode?: GAME_TYPE;
 };
 
-const MultipleChoice = ({ game }: Props) => {
+const MultipleChoice = ({ game, mode = GAME_TYPE.MULTIPLE_CHOICE }: Props) => {
   const [questionIndex, setQuestionIndex] = useState(0);
-  const [selectedChoice, setSelectedChoice] = useState<number | null>(null);
+  const [selectedChoice, setSelectedChoice] = useState<number | boolean | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
   const [hasEnded, setHasEnded] = useState(false);
@@ -44,32 +45,38 @@ const MultipleChoice = ({ game }: Props) => {
     mutationFn: async () => {
       const response = await axios.post("/api/checkAnswer", {
         questionId: currentQuestion?.id,
-        userAnswer: options[selectedChoice as number],
-        questionType: GAME_TYPE.MULTIPLE_CHOICE,
+        userAnswer: (mode === GAME_TYPE.MULTIPLE_CHOICE 
+            ? (options?.[selectedChoice as number])
+            : (selectedChoice as boolean)),
+        questionType: mode,
       });
       return response.data;
     },
   });
 
   const options = useMemo(() => {
-    if (!currentQuestion || !currentQuestion.options) return [];
-    return JSON.parse(currentQuestion.options as string) as string[];
+    if(mode === GAME_TYPE.MULTIPLE_CHOICE) {
+      if (!currentQuestion || !currentQuestion.options) return [];
+      return JSON.parse(currentQuestion.options as string) as string[];
+    }
   }, [currentQuestion]);
 
   useEffect(() => {
-    const handleKeydown = (e: KeyboardEvent) => {
-      if (e.key >= "1" && e.key <= String(options.length)) {
-        setSelectedChoice(Number(e.key) - 1);
-      }
-      if (e.key === "Enter") {
-        handleNext();
-      }
-    };
-    document.addEventListener("keydown", handleKeydown);
+    if(mode == GAME_TYPE.MULTIPLE_CHOICE) {
+      const handleKeydown = (e: KeyboardEvent) => {
+        if (e.key >= "1" && e.key <= String(options?.length)) {
+          setSelectedChoice(Number(e.key) - 1);
+        }
+        if (e.key === "Enter") {
+          handleNext();
+        }
+      };
+      document.addEventListener("keydown", handleKeydown);
 
-    return () => {
-      document.removeEventListener("keydown", handleKeydown);
-    };
+      return () => {
+        document.removeEventListener("keydown", handleKeydown);
+      };
+    }
   }, []);
 
   const handleNext = useCallback(() => {
@@ -155,7 +162,7 @@ const MultipleChoice = ({ game }: Props) => {
         </CardHeader>
       </Card>
       <div className="mt-4 flex w-full flex-col items-center justify-center">
-        {options.map((option, idx) => {
+        {mode === GAME_TYPE.MULTIPLE_CHOICE ? options?.map((option, idx) => {
           return (
             <Button
               key={idx}
@@ -169,9 +176,22 @@ const MultipleChoice = ({ game }: Props) => {
               </div>
             </Button>
           );
-        })}
+        }): (
+          <>
+            <Button key="true" className="mb-4 w-full cursor-pointer justify-start py-8"
+              onClick={() => setSelectedChoice(true)}
+              variant={selectedChoice === true ? "default" : "secondary"}>
+                TRUE
+            </Button>
+            <Button key="false" className="mb-4 w-full cursor-pointer justify-start py-8"
+              onClick={() => setSelectedChoice(false)}
+              variant={selectedChoice === false ? "default" : "secondary"}>
+                FALSE
+            </Button>
+          </>
+        )}
         <Button
-          className="mt-2"
+          className="mt-2 cursor-pointer"
           onClick={handleNext}
           disabled={selectedChoice === null || isChecking}
         >

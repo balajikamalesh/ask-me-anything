@@ -18,18 +18,32 @@ export async function POST(req: Request, res: Response) {
     }
 
     if (questionType == "multiple_choice") {
-        const isCorrect = question.answer.toLocaleLowerCase().trim() === userAnswer.toLocaleLowerCase().trim();
+        console.log('question.answer:', question.answer, 'userAnswer:', userAnswer);
+        const isCorrectChoice = question.answer.toLocaleLowerCase().trim() === userAnswer.toString().toLocaleLowerCase().trim();
         await db.question.update({
             where: {
                 id: questionId,
             },
             data: {
-                userAnswer,
+                userAnswer: userAnswer.toString(),
+                isCorrectChoice
+            },
+        });
+        return NextResponse.json({ isCorrect: isCorrectChoice });
+    } else if (questionType == "true_false") {
+        const isCorrect = question.answer.toString() === userAnswer.toString();
+        await db.question.update({
+            where: {
+                id: questionId,
+            },
+            data: {
+                userAnswer: userAnswer.toString(),
                 isCorrect
             },
         });
         return NextResponse.json({ isCorrect });
     }
+
   } catch (error) {
     if (error instanceof ZodError) {
       return NextResponse.json({ errors: error.issues }, { status: 400 });

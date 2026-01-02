@@ -32,11 +32,11 @@ const MultipleChoicePage = async ({ params }: Props) => {
     },
   });
 
-  if (!game || game.gametype !== GAME_TYPE.MULTIPLE_CHOICE) {
+  if (!game || game.gametype !== GAME_TYPE.TRUE_FALSE) {
     redirect("/quiz");
   }
 
-  return <MultipleChoice game={game} />
+  return <MultipleChoice mode={GAME_TYPE.TRUE_FALSE} game={game} />
   
 };
 

@@ -1,9 +1,9 @@
-import MultipleChoice from "@/components/MultipleChoice";
+import React from "react";
 import { db } from "@/server/db";
-import { GAME_TYPE } from "@/types/question-response";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import React from "react";
+import { GAME_TYPE } from "@/types/question-response";
+import MultipleChoice from "@/components/MultipleChoice";
 
 type Props = {
   params: {

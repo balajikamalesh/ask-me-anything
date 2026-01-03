@@ -1,6 +1,6 @@
+import React from "react";
 import { Separator } from "@radix-ui/react-select";
 import { CheckCircle2, XCircle } from "lucide-react";
-import React from "react";
 
 type Props = {
   correctCount?: number;

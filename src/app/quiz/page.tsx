@@ -1,7 +1,7 @@
-import QuizCreation from "@/components/QuizCreation";
+import React from "react";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import React from "react";
+import QuizCreation from "@/components/QuizCreation";
 
 type Props = {};
 

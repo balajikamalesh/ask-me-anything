@@ -1,7 +1,7 @@
+import { ZodError } from "zod";
+import { NextResponse } from "next/server";
 import { strict_output } from "@/lib/gpt";
 import { QuizCreationSchema } from "@/schema/form/quiz";
-import { NextResponse } from "next/server";
-import { ZodError } from "zod";
 
 // POST /api/questions
 export async function POST(request: Request) {

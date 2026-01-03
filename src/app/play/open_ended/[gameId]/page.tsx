@@ -2,7 +2,7 @@ import React from "react";
 import { db } from "@/server/db";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
-import MultipleChoice from "@/components/MultipleChoice";
+import OpenEnded from "@/components/OpenEnded";
 import { GAME_TYPE } from "@/types/question-response";
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
   };
 };
 
-const MultipleChoicePage = async ({ params }: Props) => {
+const OpenEndedPage = async ({ params }: Props) => {
   const { gameId } = await params;
   const { userId } = await auth();
   if (!userId) redirect("/sign-in");
@@ -26,18 +26,18 @@ const MultipleChoicePage = async ({ params }: Props) => {
         select: {
           id: true,
           question: true,
-          options: true,
+          answer: true,
         },
       },
     },
   });
 
-  if (!game || game.gametype !== GAME_TYPE.MULTIPLE_CHOICE) {
+  if (!game || game.gametype !== GAME_TYPE.OPEN_ENDED) {
     redirect("/quiz");
   }
 
-  return <MultipleChoice game={game} />
+  return <OpenEnded game={game} />
   
 };
 
-export default MultipleChoicePage;
+export default OpenEndedPage;

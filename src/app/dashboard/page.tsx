@@ -1,8 +1,8 @@
+import React from 'react';
+import QuizMeCard from '@/components/dashboard/QuizMeCard';
 import HistoryCard from '@/components/dashboard/HistoryCard';
 import HotTopicsCard from '@/components/dashboard/HotTopicsCard';
-import QuizMeCard from '@/components/dashboard/QuizMeCard';
 import RecentActivity from '@/components/dashboard/RecentActivity';
-import React from 'react';
 
 export const metadata = {
     title: "Dashboard | Quiz Engine",

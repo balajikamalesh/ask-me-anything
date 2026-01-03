@@ -3,17 +3,17 @@
 import axios from "axios";
 import { toast } from "sonner";
 import { differenceInSeconds } from "date-fns";
-import { BarChart, ChevronRight, Timer } from "lucide-react";
+import { ChevronRight, Timer } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Button, buttonVariants } from "./ui/button";
+import { Button } from "./ui/button";
 import MCQCounter from "./MCQCounter";
+import { formatTimeDelta } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { GAME_TYPE } from "@/types/question-response";
 import type { Game, Question } from "generated/prisma";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import Link from "next/link";
-import { cn, formatTimeDelta } from "@/lib/utils";
+import EndScreen from "./EndScreen";
 
 type Props = {
   game: Game & { questions: Pick<Question, "id" | "question" | "options">[] };
@@ -100,22 +100,7 @@ const MultipleChoice = ({ game, mode = GAME_TYPE.MULTIPLE_CHOICE }: Props) => {
   }, [currentQuestion, options, selectedChoice]);
 
   if (hasEnded) {
-    return (
-      <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center">
-        <div className="mt-2 rounded-md bg-green-500 px-4 font-semibold whitespace-nowrap text-white">
-          You completed the quiz in {formatTimeDelta(
-              differenceInSeconds(now, new Date(game.timeStarted)),
-            )}!
-        </div>
-        <Link
-          href={`/statistics/${game.id}`}
-          className={cn(buttonVariants(), "mt-2")}
-        >
-          View Statistics
-          <BarChart className="ml-2 h-4 w-4" />
-        </Link>
-      </div>
-    );
+    return <EndScreen game={game} now={now} />;
   }
 
   return (

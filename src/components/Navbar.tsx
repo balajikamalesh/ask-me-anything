@@ -1,6 +1,6 @@
-import { UserButton } from "@clerk/nextjs";
-import Link from "next/link";
 import React from "react";
+import Link from "next/link";
+import { UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
   return (

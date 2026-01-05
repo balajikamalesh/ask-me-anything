@@ -3,7 +3,7 @@
 import axios from "axios";
 import { toast } from "sonner";
 import { differenceInSeconds } from "date-fns";
-import { ChevronRight, Timer } from "lucide-react";
+import { ChevronRight, Loader, Timer } from "lucide-react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Button } from "./ui/button";
@@ -180,6 +180,7 @@ const MultipleChoice = ({ game, mode = GAME_TYPE.MULTIPLE_CHOICE }: Props) => {
           onClick={handleNext}
           disabled={selectedChoice === null || isChecking}
         >
+          {isChecking && <Loader className="mr-2 h-4 w-4 animate-spin" />}
           Next <ChevronRight className="ml-2 h-5 w-4" />
         </Button>
       </div>

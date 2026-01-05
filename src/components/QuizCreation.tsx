@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 import {
   Card,
@@ -36,6 +36,8 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
+import LoadingQuestions from "./LoadingQuestions";
+import { set } from "zod";
 
 type Props = {};
 
@@ -43,6 +45,8 @@ type InputForm = z.infer<typeof QuizCreationSchema>;
 
 const QuizCreation = (props: Props) => {
   const router = useRouter();
+  const [showLoader, setShowLoader] = useState(false);
+  const [finished, setFinished] = useState(false);
 
   const { mutate: getQuestions, isPending } = useMutation({
     mutationFn: async ({ count, topic, type }: InputForm) => {
@@ -65,15 +69,24 @@ const QuizCreation = (props: Props) => {
   });
 
   function onSubmit(data: InputForm) {
+    setShowLoader(true);
     getQuestions(data, {
       onSuccess: ({ gameId }) => {
-        toast.success("Quiz created successfully!");
-        router.push(`/play/${form.getValues("type")}/${gameId}`);
+        setFinished(true);
+        setTimeout(() => {
+          toast.success("Quiz created successfully!");
+          router.push(`/play/${form.getValues("type")}/${gameId}`);
+        }, 1000);
       },
       onError: (error) => {
         toast.error("Failed to create quiz. Please try again.");
-      }
+        setShowLoader(false);
+      },
     });
+  }
+
+  if (showLoader) {
+    return <LoadingQuestions finished={finished} />;
   }
 
   return (
@@ -166,7 +179,11 @@ const QuizCreation = (props: Props) => {
                   </FormItem>
                 )}
               />
-              <Button className="cursor-pointer" type="submit" disabled={isPending}>
+              <Button
+                className="cursor-pointer"
+                type="submit"
+                disabled={isPending}
+              >
                 Submit
                 {isPending && <Loader className="animate-spin" />}
               </Button>

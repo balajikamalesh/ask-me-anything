@@ -10,7 +10,7 @@ const QuizMeCard = () => {
 
   return (
     <Card
-      className="hover:cursor-pointer hover:opacity-75"
+      className="opacity-100 hover:cursor-pointer hover:opacity-85 transition delay-100 hover:border-zinc-300"
       onClick={() => router.push("/quiz")}
     >
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

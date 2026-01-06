@@ -126,7 +126,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-body {
-  background: url('/questions_page.png');
-}

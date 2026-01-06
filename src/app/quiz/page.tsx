@@ -3,7 +3,9 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import QuizCreation from "@/components/QuizCreation";
 
-type Props = {};
+type Props = {
+  searchParams: Promise<{ topic?: string }>;
+};
 
 export const metadata = {
   title: "Quiz | Quiz Engine",
@@ -12,9 +14,11 @@ export const metadata = {
 const QuizPage = async (props: Props) => {
   const userId = await auth();
   if (!userId) redirect("/sign-in");
+  
+  const searchParams = await props.searchParams;
 
   return <div className="h-screen">
-    <QuizCreation />
+    <QuizCreation topic={searchParams.topic} />
   </div>;
 };
 

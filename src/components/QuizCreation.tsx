@@ -39,11 +39,13 @@ import { Loader } from "lucide-react";
 import LoadingQuestions from "./LoadingQuestions";
 import { set } from "zod";
 
-type Props = {};
+type Props = {
+  topic?: string;
+};
 
 type InputForm = z.infer<typeof QuizCreationSchema>;
 
-const QuizCreation = (props: Props) => {
+const QuizCreation = ({ topic }: Props) => {
   const router = useRouter();
   const [showLoader, setShowLoader] = useState(false);
   const [finished, setFinished] = useState(false);
@@ -63,7 +65,7 @@ const QuizCreation = (props: Props) => {
     resolver: zodResolver(QuizCreationSchema),
     defaultValues: {
       count: 3,
-      topic: "",
+      topic: topic || "",
       type: "open_ended",
     },
   });

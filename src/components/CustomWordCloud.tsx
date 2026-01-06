@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 type WordPlacement = {
@@ -46,13 +47,14 @@ const doesOverlap = (
   );
 };
 
-const CustomWordCloud: React.FC<SvgWordCloudProps> = ({
+const CustomWordCloud = ({
   words,
   width = DEFAULT_WIDTH,
   height = DEFAULT_HEIGHT,
   fontSize = DEFAULT_FONT_SIZE,
   maxAttempts = 60,
-}) => {
+}: SvgWordCloudProps) => {
+  const router = useRouter();
   const [placedWords, setPlacedWords] = useState<WordPlacement[]>([]);
 
   useEffect(() => {
@@ -107,6 +109,8 @@ const CustomWordCloud: React.FC<SvgWordCloudProps> = ({
     <svg width="100%" height={height}>
       {placedWords.map((word, index) => (
         <text
+          className="cursor-pointer"
+          onClick={() => router.push("/quiz?topic=" + encodeURIComponent(word.text))}
           key={`${word.text}-${index}`}
           x={word.x}
           y={word.y}

@@ -126,3 +126,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+body {
+  @apply bg-linear-to-br from-indigo-50 via-white to-purple-50;
+}

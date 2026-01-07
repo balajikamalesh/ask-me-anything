@@ -53,6 +53,7 @@ const QuizCreation = ({ topic }: Props) => {
     mutationFn: async ({ count, topic, type }: InputForm) => {
       const res = await fetch("/api/game", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ count, topic, type }),
       });

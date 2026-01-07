@@ -44,6 +44,7 @@ const MultipleChoice = ({ game, mode = GAME_TYPE.MULTIPLE_CHOICE }: Props) => {
     mutationFn: async () => {
       const res = await fetch("/api/checkAnswer", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           questionId: currentQuestion?.id,

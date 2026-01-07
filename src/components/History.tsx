@@ -1,6 +1,6 @@
 import { db } from "@/server/db";
 import { currentUser } from "@clerk/nextjs/server";
-import { Binary, CircleQuestionMark, Clock, CopyCheck } from "lucide-react";
+import { Binary, CircleQuestionMark, Clock, CopyCheck, Loader } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -32,7 +32,7 @@ const History = async ({ limit }: Props) => {
 
   return (
     <div className="flex min-h-screen flex-col gap-2">
-      {games.map((game) => (
+      {games ? games.map((game) => (
         <div key={game.id} className="flex items-center justify-between">
           <div className="flex items-center">
             {icons[game.gametype]}
@@ -53,7 +53,7 @@ const History = async ({ limit }: Props) => {
             </div>
           </div>
         </div>
-      ))}
+      )) : <Loader className="animate-spin"/>}
     </div>
   );
 };

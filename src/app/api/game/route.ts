@@ -26,6 +26,7 @@ export async function POST(request: Request) {
 
     const res = await fetch(`${process.env.API_URL}/questions`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ count, topic, type }),
     });

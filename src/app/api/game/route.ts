@@ -8,6 +8,7 @@ import type {
   oeQuestion,
   tfQuestion,
 } from "@/types/question-response";
+import { strict_output } from "@/lib/gpt";
 
 export async function POST(request: Request) {
   try {
@@ -15,6 +16,7 @@ export async function POST(request: Request) {
     const { count, topic, type } = QuizCreationSchema.parse(body);
     const loggedInUser = await currentUser();
 
+    // Create a new game entry in the database
     const game = await db.game.create({
       data: {
         topic: topic,
@@ -24,21 +26,49 @@ export async function POST(request: Request) {
       },
     });
 
-    const res = await fetch(`${process.env.API_URL}/questions`, {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ count, topic, type }),
-    });
-
-    if (!res.ok) {
-      throw new Error(`Questions API error: ${res.status} ${res.statusText}`);
-    }
-
-    const data = await res.json();
+    // Generate questions using ai
+    let questions: any[] = [];
 
     if (type === "multiple_choice") {
-      let manyData = data.questions.map((question: mcqQuestion) => ({
+      questions = await strict_output(
+        "You are a helpful AI that is able to generate mcq questions and answers, the length of each answer should not be more than 15 words, store all answers and questions and options in a JSON array",
+        new Array(count).fill(
+          `You are to generate a random hard mcq question about ${topic}`,
+        ),
+        {
+          question: "question",
+          answer: "answer with max length of 15 words, must match exactly one of the options",
+          option1: "option1 with max length of 15 words",
+          option2: "option2 with max length of 15 words",
+          option3: "option3 with max length of 15 words",
+        },
+      );
+    } else if (type === "true_false") {
+      questions = await strict_output(
+        "You are a helpful AI that is able to generate true/false questions and answers, store all answers and questions in a JSON array",
+        new Array(count).fill(
+          `You are to generate a random hard true/false question about ${topic}`,
+        ),
+        {
+          question: "question",
+          answer: "true or false",
+        },
+      );
+    } else if (type === "open_ended") {
+      questions = await strict_output(
+        "You are a helpful AI that is able to generate a pair of question and answers, the length of each answer should not be more than 15 words, store all the pairs of answers and questions in a JSON array",
+        new Array(count).fill(
+          `You are to generate a random hard open-ended questions about ${topic}`,
+        ),
+        {
+          question: "question",
+          answer: "answer with max length of 15 words",
+        },
+      );
+    }
+
+    if (type === "multiple_choice") {
+      let manyData = questions.map((question: mcqQuestion) => ({
         question: question.question,
         answer: question.answer,
         options: JSON.stringify(
@@ -55,7 +85,7 @@ export async function POST(request: Request) {
         data: manyData,
       });
     } else if (type === "open_ended") {
-      let manyData = data.questions.map((question: oeQuestion) => ({
+      let manyData = questions.map((question: oeQuestion) => ({
         question: question.question,
         answer: question.answer,
         gameId: game.id,
@@ -65,7 +95,7 @@ export async function POST(request: Request) {
         data: manyData,
       });
     } else {
-      let manyData = data.questions.map((question: tfQuestion) => ({
+      let manyData = questions.map((question: tfQuestion) => ({
         question: question.question,
         answer: question.answer.toString(),
         gameId: game.id,

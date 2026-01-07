@@ -33,7 +33,6 @@ import {
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
 import LoadingQuestions from "./LoadingQuestions";
@@ -52,13 +51,17 @@ const QuizCreation = ({ topic }: Props) => {
 
   const { mutate: getQuestions, isPending } = useMutation({
     mutationFn: async ({ count, topic, type }: InputForm) => {
-      const response = await axios.post("/api/game", {
-        count,
-        topic,
-        type,
+      const res = await fetch("/api/game", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ count, topic, type }),
       });
-      return response.data;
+      const data = await res.json();
+      return data;
     },
+    onError: (error: any) => {
+      toast.error(`Error creating quiz: ${error.message}`);
+    }
   });
 
   const form = useForm<InputForm>({

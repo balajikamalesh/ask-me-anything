@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import { toast } from "sonner";
 import { differenceInSeconds } from "date-fns";
 import { ChevronRight, Loader, Timer } from "lucide-react";
@@ -43,15 +42,24 @@ const MultipleChoice = ({ game, mode = GAME_TYPE.MULTIPLE_CHOICE }: Props) => {
 
   const { mutate: checkAnswer, isPending: isChecking } = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("/api/checkAnswer", {
-        questionId: currentQuestion?.id,
-        userAnswer: (mode === GAME_TYPE.MULTIPLE_CHOICE 
-            ? (options?.[selectedChoice as number])
-            : (selectedChoice as boolean)),
-        questionType: mode,
+      const res = await fetch("/api/checkAnswer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionId: currentQuestion?.id,
+          userAnswer:
+            mode === GAME_TYPE.MULTIPLE_CHOICE
+              ? options?.[selectedChoice as number]
+              : (selectedChoice as boolean),
+          questionType: mode,
+        }),
       });
-      return response.data;
+      const data = await res.json();
+      return data;
     },
+    onError: (error: any) => {
+      toast.error(`Error checking answer: ${error.message}`);
+    }
   });
 
   const options = useMemo(() => {

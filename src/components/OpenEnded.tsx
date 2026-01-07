@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import { toast } from "sonner";
 import { differenceInSeconds } from "date-fns";
 import { useMutation } from "@tanstack/react-query";
@@ -38,13 +37,21 @@ const OpenEnded = ({ game }: Props) => {
 
   const { mutate: checkAnswer, isPending: isChecking } = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("/api/checkAnswerSimilarity", {
-        questionId: currentQuestion?.id,
-        answer: currentQuestion?.answer,
-        userAnswer,
+      const res = await fetch("/api/checkAnswerSimilarity", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionId: currentQuestion?.id,
+          answer: currentQuestion?.answer,
+          userAnswer,
+        }),
       });
-      return response.data;
+      const data = await res.json();
+      return data;
     },
+    onError: (error: any) => {
+      toast.error(`Error checking answer: ${error.message}`);
+    }
   });
 
   useEffect(() => {

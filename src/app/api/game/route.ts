@@ -1,9 +1,8 @@
-import axios from "axios";
 import { ZodError } from "zod";
 import { db } from "@/server/db";
 import { NextResponse } from "next/server";
 import { QuizCreationSchema } from "@/schema/form/quiz";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import type {
   mcqQuestion,
   oeQuestion,
@@ -25,11 +24,17 @@ export async function POST(request: Request) {
       },
     });
 
-    const { data } = await axios.post(`${process.env.API_URL}/questions`, {
-      count: count,
-      topic: topic,
-      type: type,
+    const res = await fetch(`${process.env.API_URL}/questions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ count, topic, type }),
     });
+
+    if (!res.ok) {
+      throw new Error(`Questions API error: ${res.status} ${res.statusText}`);
+    }
+
+    const data = await res.json();
 
     if (type === "multiple_choice") {
       let manyData = data.questions.map((question: mcqQuestion) => ({

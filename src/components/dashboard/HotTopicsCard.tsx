@@ -10,7 +10,6 @@ import {
 } from "../ui/card";
 import CustomWordCloud from "../CustomWordCloud";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { Loader } from "lucide-react";
 
 const HotTopicsCard = () => {
@@ -18,13 +17,20 @@ const HotTopicsCard = () => {
 
   const { mutate: getHotTopics, isPending } = useMutation({
     mutationFn: async () => {
-      const response = await axios.post("/api/hotTopics");
-      return response.data;
+      const res = await fetch("/api/hotTopics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      return data;
     },
     onSuccess: ({ topics }) => {
       localStorage.setItem("hotTopics", JSON.stringify(topics.topics || []));
       setList(topics.topics || []);
     },
+    onError: (error: any) => {
+      console.error("Error fetching hot topics:", error);
+    }
   });
 
   useEffect(() => {

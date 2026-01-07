@@ -8,9 +8,9 @@ export async function POST(request: Request) {
 
     topics = await strict_output(
         "You are a helpful AI that is able to generate trending topics for quizzes without profanity or inappropriate content.",
-        "You are to generate an array of 10 trending topics for quizzes in the current year",
+        "You are to generate an array of 20 trending topics for quizzes in the current year",
         {
-          topics: "array of 10 trending topics for quiz in the current year, with maximum two words for each topic",
+          topics: "array of 20 trending topics for quiz in the current year, with maximum two words for each topic",
         },
       );
 

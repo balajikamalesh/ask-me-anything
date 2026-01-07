@@ -21,7 +21,7 @@ type SvgWordCloudProps = {
 };
 
 const DEFAULT_WIDTH = 600;
-const DEFAULT_HEIGHT = 400;
+const DEFAULT_HEIGHT = 600;
 const DEFAULT_FONT_SIZE = 18;
 
 const randomColor = (): string => {

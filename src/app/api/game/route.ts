@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     if (error instanceof ZodError) {
       return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
     }
-    console.log(error);
-    return NextResponse.json({ error: "Internal Error" }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error }, { status: 500 });
   }
 }

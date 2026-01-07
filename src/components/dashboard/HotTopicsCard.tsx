@@ -26,7 +26,7 @@ const HotTopicsCard = () => {
       return data;
     },
     onSuccess: ({ topics }) => {
-      localStorage.setItem("hotTopics", JSON.stringify(topics.topics || []));
+      sessionStorage.setItem("hotTopics", JSON.stringify(topics.topics || []));
       setList(topics.topics || []);
     },
     onError: (error: any) => {
@@ -35,10 +35,10 @@ const HotTopicsCard = () => {
   });
 
   useEffect(() => {
-    if (!localStorage.getItem("hotTopics")) {
+    if (!sessionStorage.getItem("hotTopics")) {
       getHotTopics();
     } else {
-      setList(JSON.parse(localStorage.getItem("hotTopics") || "[]"));
+      setList(JSON.parse(sessionStorage.getItem("hotTopics") || "[]"));
     }
   }, [getHotTopics]);
 

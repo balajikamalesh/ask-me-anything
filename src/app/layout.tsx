@@ -1,8 +1,9 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import "@/styles/globals.css";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/Navbar";
 import QueryProvider from "@/components/query-provider";
+import NextTopLoader from "nextjs-toploader";
 
 import { type Metadata } from "next";
 import { Geist } from "next/font/google";
@@ -27,6 +28,13 @@ export default function RootLayout({
         <body>
           <QueryProvider>
             <Navbar />
+            <NextTopLoader
+              color="#29D"
+              height={2}
+              showSpinner={false}
+              easing="ease"
+              speed={200}
+            />
             {children}
             <Toaster />
           </QueryProvider>

@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import { NextResponse } from "next/server";
 import { checkAnswerSchema } from "@/schema/form/quiz";
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
     try {
         const body = await req.json();
         const { questionId, userAnswer, questionType } = checkAnswerSchema.parse(body);
@@ -42,9 +42,11 @@ export async function POST(req: Request, res: Response) {
             });
             return NextResponse.json({ isCorrect });
         }
+        return NextResponse.json({ error: "Unsupported question type" }, { status: 400 });
     } catch (error) {
         if (error instanceof ZodError) {
             return NextResponse.json({ errors: error.issues }, { status: 400 });
         }
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

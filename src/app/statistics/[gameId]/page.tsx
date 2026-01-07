@@ -71,7 +71,7 @@ const StatisticsPage = async ({ params }: Props) => {
             timeStarted={game.timeStarted}
           />
         </div>
-        <QuestionList gameType={game.gametype} questions={questions} />
+        <QuestionList gameType={game.gametype as GAME_TYPE} questions={questions} />
       </div>
     </>
   );

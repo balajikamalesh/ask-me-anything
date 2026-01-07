@@ -8,6 +8,12 @@ type Props = {
   limit: number;
 };
 
+const TYPE_LABEL = {
+  multiple_choice: "Multiple Choice",
+  open_ended: "Open Ended",
+  true_false: "True/False",
+}
+
 const History = async ({ limit }: Props) => {
   const icons = {
     multiple_choice: <CopyCheck />,
@@ -31,7 +37,7 @@ const History = async ({ limit }: Props) => {
   });
 
   return (
-    <div className="flex min-h-screen flex-col gap-2">
+    <div className="flex min-h-screen flex-col gap-4">
       {games ? games.map((game) => (
         <div key={game.id} className="flex items-center justify-between">
           <div className="flex items-center">
@@ -48,7 +54,7 @@ const History = async ({ limit }: Props) => {
                 {new Date(game.timeStarted).toLocaleDateString()}
               </p>
               <p className="text-sm text-muted-foreground">
-                {game.gametype}
+                {TYPE_LABEL[game.gametype]}
               </p>
             </div>
           </div>
